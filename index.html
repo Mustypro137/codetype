@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeType – typing practice for programmers</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Header: app name and a short description -->
+  <header class="site-header">
+    <h1 class="logo">Code<span class="accent">Type</span></h1>
+    <p class="tagline">Practice typing real code.</p>
+  </header>
+
+  <main class="container">
+
+    <!-- Settings bar: choose language and mode -->
+    <form class="controls" aria-label="Practice settings">
+      <div class="field">
+        <label for="language-select">Language</label>
+        <select id="language-select" name="language">
+          <option value="javascript">JavaScript</option>
+          <option value="python">Python</option>
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="java">Java</option>
+          <option value="cpp">C++</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="mode-select">Mode</label>
+        <select id="mode-select" name="mode">
+          <option value="natural">Natural</option>
+          <option value="strict">Strict</option>
+        </select>
+      </div>
+    </form>
+
+    <!-- Live stats: JavaScript will update these numbers later -->
+    <section class="stats" aria-label="Live stats">
+      <dl class="stats-list">
+        <div class="stat">
+          <dt>WPM</dt>
+          <dd id="wpm">0</dd>
+        </div>
+        <div class="stat">
+          <dt>Accuracy</dt>
+          <dd id="accuracy">100%</dd>
+        </div>
+        <div class="stat">
+          <dt>Time</dt>
+          <dd id="time">0s</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- Code area: the snippet the user will type -->
+    <section class="code-area" aria-label="Code to type">
+      <pre><code id="snippet">function greet(name) {
+  const message = `Hello, ${name}!`;
+  console.log(message);
+  return message;
+}
+
+greet("CodeType");</code></pre>
+    </section>
+
+    <!-- Restart button -->
+    <div class="actions">
+      <button type="button" id="restart-btn" class="btn">Restart</button>
+    </div>
+
+    <!-- Results panel: hidden now, JavaScript will show it later -->
+    <section id="results" class="results" aria-labelledby="results-title" hidden>
+      <h2 id="results-title">Results</h2>
+      <dl class="stats-list">
+        <div class="stat">
+          <dt>WPM</dt>
+          <dd id="result-wpm">0</dd>
+        </div>
+        <div class="stat">
+          <dt>Accuracy</dt>
+          <dd id="result-accuracy">0%</dd>
+        </div>
+        <div class="stat">
+          <dt>Time</dt>
+          <dd id="result-time">0s</dd>
+        </div>
+        <div class="stat">
+          <dt>Errors</dt>
+          <dd id="result-errors">0</dd>
+        </div>
+      </dl>
+      <button type="button" id="try-again-btn" class="btn">Try again</button>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>CodeType – a practice project in HTML, CSS and JavaScript.</p>
+  </footer>
+
+</body>
+</html>

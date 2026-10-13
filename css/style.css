@@ -1,0 +1,260 @@
+/* ===== Colours and fonts (CSS variables) ===== */
+:root {
+  --bg: #0f1117;
+  --surface: #181b24;
+  --border: #2a2f3d;
+  --text: #e6e8ee;
+  --muted: #9aa1b2;
+  --accent: #f5b942;
+  --accent-hover: #ffcc66;
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", Consolas, "Courier New", monospace;
+
+  --radius: 10px;
+  --space: 16px;
+}
+
+/* ===== Small reset ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+/* Make sure "hidden" always hides, even if other CSS sets display */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+/* ===== Header ===== */
+.site-header {
+  padding: var(--space);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.logo {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.tagline {
+  color: var(--muted);
+}
+
+/* ===== Main container ===== */
+.container {
+  flex: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+/* ===== Settings bar ===== */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field label {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+}
+
+/* ===== Live stats ===== */
+.stats-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.stat {
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.stat dt {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat dd {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* ===== Code area ===== */
+.code-area {
+  padding: var(--space);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.code-area pre {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  white-space: pre-wrap;      /* long lines wrap, no sideways scroll */
+  overflow-wrap: anywhere;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  width: 100%;
+  padding: 12px 24px;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: var(--radius);
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--accent-hover);
+}
+
+/* Clear outline for keyboard users */
+select:focus-visible,
+.btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ===== Results panel ===== */
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  padding: var(--space);
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+}
+
+.results .stats-list {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.results .stat {
+  background: var(--bg);
+}
+
+/* ===== Footer ===== */
+.site-footer {
+  padding: var(--space);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* ===== Tablet: 768px and wider ===== */
+@media (min-width: 768px) {
+  .site-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: var(--space) 32px;
+    text-align: left;
+  }
+
+  .container {
+    padding: 32px;
+    gap: 24px;
+  }
+
+  .controls {
+    flex-direction: row;
+  }
+
+  .field {
+    flex: 1;
+  }
+
+  .code-area {
+    padding: 24px;
+  }
+
+  .code-area pre {
+    font-size: 1.3rem;
+  }
+
+  .stat dd {
+    font-size: 1.8rem;
+  }
+
+  .btn {
+    width: auto;
+  }
+
+  .results .stats-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .results .btn {
+    align-self: flex-start;
+  }
+}
+
+/* ===== Desktop: 1280px and wider ===== */
+@media (min-width: 1280px) {
+  .logo {
+    font-size: 2.5rem;
+  }
+
+  .code-area {
+    padding: 32px;
+  }
+
+  .code-area pre {
+    font-size: 1.5rem;
+  }
+}
