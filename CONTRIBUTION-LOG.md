@@ -17,6 +17,7 @@
 | 2026-10-14 | | Added a 60-second time limit in js/stats.js: the time counts down from the first key ("Time left"). At 0 the game stops (stopTyping in engine.js) and shows the same results panel. Finishing early still works. The results panel and design are unchanged. | |
 | 2026-10-14 | | Added a "Goal" menu (js/goal.js): 60 seconds, 30 seconds, 60 words, 30 words, Full snippet. With a time or word goal, the next snippet comes when one is finished and the stats keep counting. The third live box shows Time left, Words (12 / 30) or Time. The goal is saved with the other settings. | |
 | 2026-10-14 | | Fixed a bug: when the game ended, the next Space closed the results, because the focus was on the "Next snippet" button. Now the focus goes to the results panel and the page scrolls to it. Tab still reaches the buttons. | |
+| 2026-10-14 | | Added a "Support CodeType ($5, test)" button in the footer. It is a plain HTML PayPal form that uses the PayPal Sandbox (fake money) and the Sandbox Business account. No JavaScript. Added a short note in the README. | |
 
 ## Summary of every phase
 

@@ -549,6 +549,15 @@ kbd {
   text-align: center;
 }
 
+/* PayPal support button under the footer text */
+.support-form {
+  margin-top: 12px;
+}
+
+.support-form .btn {
+  width: auto;
+}
+
 /* ===== Tablet: 768px and wider ===== */
 @media (min-width: 768px) {
   .site-header {
