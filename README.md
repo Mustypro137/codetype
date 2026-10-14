@@ -20,7 +20,13 @@ CodeType is a typing practice web app for programmers. Normal typing tests use n
 - Optional **"3, 2, 1" countdown** before you start.
 
 **Stats and progress**
-- Live **WPM**, **accuracy** and **time**. WPM = (correct characters ÷ 5) ÷ minutes.
+- A **Goal** menu chooses what ends the game:
+  - **60 seconds** or **30 seconds**: the clock counts down from your first key. At 0 the game stops.
+  - **60 words** or **30 words**: the game stops when you have typed that many words. A word is text between spaces or new lines.
+  - **Full snippet**: the game stops when you finish the snippet.
+
+  With a time or word goal, a new snippet comes when you finish one, and your stats keep counting.
+- Live **WPM**, **accuracy**, and **time left** / **words** / **time** (depends on the goal). WPM = (correct characters ÷ 5) ÷ minutes.
 - **Results panel** at the end: WPM, accuracy, time, mistakes and the 5 keys with the most mistakes.
 - **Progress** section: best WPM and average accuracy for each language, and your recent runs. The last 50 runs are saved.
 
@@ -99,6 +105,7 @@ js/snippets.js        reads the snippet data
 js/storage.js         saves settings and runs in localStorage
 js/highlight.js       syntax colours (a small regex per language)
 js/theme.js           light/dark theme
+js/goal.js            the Goal menu: what ends a game
 js/stats.js           timer, WPM and accuracy
 js/results.js         results panel
 js/progress.js        progress section

@@ -2,6 +2,7 @@
 
 const languageSelect = document.querySelector("#language-select");
 const modeSelect = document.querySelector("#mode-select");
+const goalSelect = document.querySelector("#goal-select");
 const restartButton = document.querySelector("#restart-btn");
 const tryAgainButton = document.querySelector("#try-again-btn");
 const nextButton = document.querySelector("#next-snippet-btn");
@@ -50,6 +51,21 @@ function showRandomSnippet() {
     currentSnippetId = snippet.id;
 }
 
+// With a time or word goal: the snippet is finished but the game goes on.
+// Shows a new snippet (or the same custom code again) without resetting the stats.
+function continueWithNextSnippet() {
+    if (languageSelect.value === CUSTOM_LANGUAGE) {
+        continueWithSnippet(typingText); // from engine.js: typingText is the custom code
+        return;
+    }
+
+    const snippet = getRandomSnippet(languageSelect.value, currentSnippetId);
+    continueWithSnippet(snippet.code, snippet.language); // from engine.js
+    snippetElement.dataset.id = snippet.id;
+    snippetElement.dataset.difficulty = snippet.difficulty;
+    currentSnippetId = snippet.id;
+}
+
 // ===== Saved settings =====
 
 // Puts back the settings from the last visit (if they still exist).
@@ -61,6 +77,9 @@ function applySavedSettings() {
     }
     if (hasOption(modeSelect, settings.mode)) {
         modeSelect.value = settings.mode;
+    }
+    if (hasOption(goalSelect, settings.goal)) {
+        goalSelect.value = settings.goal;
     }
     if (typeof settings.countdown === "boolean") {
         countdownToggle.checked = settings.countdown;
@@ -76,6 +95,7 @@ function saveCurrentSettings() {
     saveSettings({ // from storage.js
         language: languageSelect.value,
         mode: modeSelect.value,
+        goal: goalSelect.value,
         countdown: countdownToggle.checked,
         theme: getCurrentTheme() // from theme.js
     });
@@ -138,6 +158,14 @@ function onModeChange() {
     moveFocusAfterChoice();
 }
 
+// A new goal starts the snippet again, because the old numbers do not fit it.
+function onGoalChange() {
+    setGoal(goalSelect.value); // from goal.js
+    saveCurrentSettings();
+    restartTyping(); // from engine.js
+    moveFocusAfterChoice();
+}
+
 function onCountdownToggle() {
     setCountdownEnabled(countdownToggle.checked); // from countdown.js
     saveCurrentSettings();
@@ -170,6 +198,7 @@ function onNextClick() {
 
 languageSelect.addEventListener("change", onLanguageChange);
 modeSelect.addEventListener("change", onModeChange);
+goalSelect.addEventListener("change", onGoalChange);
 countdownToggle.addEventListener("change", onCountdownToggle);
 themeButton.addEventListener("click", onThemeClick);
 restartButton.addEventListener("click", onRestartClick);
@@ -181,6 +210,7 @@ nextButton.addEventListener("click", onNextClick);
 fillLanguageSelect();
 applySavedSettings();
 setTypingMode(modeSelect.value);
+setGoal(goalSelect.value); // from goal.js
 setCountdownEnabled(countdownToggle.checked);
 buildKeyRow(); // from keyboard.js
 renderProgress(); // from progress.js

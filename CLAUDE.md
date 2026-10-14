@@ -13,19 +13,20 @@ CodeType is a typing practice web app for programmers. The user types real code 
 All JS files share one global scope. Files call each other's functions directly.
 
 The load order in `index.html` matters. A new file must go in the right place:
-`data/snippets.js` → `js/snippets.js` → `js/storage.js` → `js/highlight.js` → `js/theme.js` → `js/stats.js` → `js/results.js` → `js/progress.js` → `js/custom.js` → `js/countdown.js` → `js/keyboard.js` → `js/engine.js` → `js/main.js`
+`data/snippets.js` → `js/snippets.js` → `js/storage.js` → `js/highlight.js` → `js/theme.js` → `js/goal.js` → `js/stats.js` → `js/results.js` → `js/progress.js` → `js/custom.js` → `js/countdown.js` → `js/keyboard.js` → `js/engine.js` → `js/main.js`
 
 | File | Job |
 |------|-----|
 | `data/snippets.js` | `SNIPPETS` array. Each item: `id`, `language`, `difficulty`, `code`. |
 | `js/snippets.js` | Reads the data: `getLanguages()`, `getRandomSnippet()`. |
-| `js/engine.js` | One `<span>` per character, keyboard, cursor, Natural/Strict mode, keeps the current line in view. Public: `loadSnippet(code, language)`, `restartTyping`, `setTypingMode`, `countCorrectChars`. |
+| `js/engine.js` | One `<span>` per character, keyboard, cursor, Natural/Strict mode, keeps the current line in view. Public: `loadSnippet(code, language)`, `continueWithSnippet` (next snippet, same game), `stopTyping`, `countWordsTyped`, `restartTyping`, `setTypingMode`, `countCorrectChars`. |
 | `js/highlight.js` | Syntax colours: `getTokenTypes(code, language)` gives "comment", "string", "keyword", "number" or null per character. Rules per language in `HIGHLIGHT_RULES`. |
 | `js/theme.js` | Light/dark: `applyTheme`, `toggleTheme`, `getCurrentTheme`, `getSystemTheme`. Light colours are in `:root[data-theme="light"]`. |
 | `js/countdown.js` | "3, 2, 1" before typing: `startCountdown`, `stopCountdown`, `isCountdownRunning`, `setCountdownEnabled`. |
 | `js/keyboard.js` | Symbol key row: `buildKeyRow`, `highlightNextKey`. The `<kbd>` keys are written in `index.html` (no layout jump on load). |
-| `js/stats.js` | Timer, WPM = (correct chars / 5) / minutes, accuracy, live stats. The engine calls `recordKeyPress`, `finishStats`, `resetStats`. |
-| `js/storage.js` | localStorage, always inside try/catch: `loadSettings`, `saveSettings(settings)` (language, mode, countdown, theme), `getSavedRuns`, `addRun` (keeps the last 50). |
+| `js/goal.js` | The "Goal" menu: `time-60`, `time-30`, `words-60`, `words-30`, `full`. `setGoal`, `getTimeLimitSeconds`, `getWordLimit`, `checkGoal` (called by the engine after every key: end the game, or `continueWithNextSnippet()` in main.js). |
+| `js/stats.js` | Timer: counts down for a time goal (a `setTimeout` ends the game exactly at the limit), counts up otherwise. Keeps chars and words of earlier snippets in the same game (`keepSnippetProgress`). Third live box: "Time left" / "Words 12 / 30" / "Time". WPM = (correct chars / 5) / minutes, accuracy, live stats. The engine calls `recordKeyPress`, `finishStats`, `resetStats`, `hasRunStarted`, `hasRunEnded`. |
+| `js/storage.js` | localStorage, always inside try/catch: `loadSettings`, `saveSettings(settings)` (language, mode, goal, countdown, theme), `getSavedRuns`, `addRun` (keeps the last 50). |
 | `js/results.js` | Results panel: `showResults`, `hideResults`. |
 | `js/progress.js` | Progress section (best WPM, average accuracy per language, recent runs): `renderProgress`. |
 | `js/custom.js` | "Custom code" textarea: `cleanCustomCode`, `showCustomPanel`, `hideCustomPanel`. |

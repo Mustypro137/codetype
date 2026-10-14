@@ -35,6 +35,18 @@
         </select>
       </div>
 
+      <div class="field">
+        <label for="goal-select">Goal</label>
+        <!-- What ends the game (js/goal.js) -->
+        <select id="goal-select" name="goal">
+          <option value="time-60">60 seconds</option>
+          <option value="time-30">30 seconds</option>
+          <option value="words-60">60 words</option>
+          <option value="words-30">30 words</option>
+          <option value="full">Full snippet</option>
+        </select>
+      </div>
+
       <div class="field field-checkbox">
         <label for="countdown-toggle">
           <input type="checkbox" id="countdown-toggle" checked>
@@ -63,8 +75,8 @@
           <dd id="accuracy">100%</dd>
         </div>
         <div class="stat">
-          <dt>Time</dt>
-          <dd id="time">0s</dd>
+          <dt id="time-label">Time left</dt>
+          <dd id="time">60s</dd>
         </div>
       </dl>
     </section>
@@ -159,6 +171,7 @@
   <script src="js/storage.js"></script>
   <script src="js/highlight.js"></script>
   <script src="js/theme.js"></script>
+  <script src="js/goal.js"></script>
   <script src="js/stats.js"></script>
   <script src="js/results.js"></script>
   <script src="js/progress.js"></script>

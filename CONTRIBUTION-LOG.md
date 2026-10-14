@@ -14,6 +14,8 @@
 | 2026-10-14 | | Checked the whole app (360/768/1280px, keyboard only, labels, contrast, console, Lighthouse, every button, edge cases) and fixed the problems: favicon, stronger comment and light-red colours, wavy underline for mistakes, fixed-height code box and key row in HTML (no page jump), code area reachable with Tab, Esc to leave the code, focus stays on controls when you use the keyboard, hint text kept after Restart in custom mode, WPM limit for very short snippets. Lighthouse is now 100 everywhere. | |
 | 2026-10-14 | | Prepared the project for GitHub Pages: checked that all file paths are relative and that file names match exactly (GitHub Pages is case-sensitive), took 3 screenshots (images/screenshots/), wrote the full README, added the phase summary below, and wrote the steps to push and turn on GitHub Pages. | |
 | 2026-10-14 | | Removed "Cascadia Code" from the font list (the browser blocked it for privacy and showed a console message), committed all the work and pushed it to GitHub. | |
+| 2026-10-14 | | Added a 60-second time limit in js/stats.js: the time counts down from the first key ("Time left"). At 0 the game stops (stopTyping in engine.js) and shows the same results panel. Finishing early still works. The results panel and design are unchanged. | |
+| 2026-10-14 | | Added a "Goal" menu (js/goal.js): 60 seconds, 30 seconds, 60 words, 30 words, Full snippet. With a time or word goal, the next snippet comes when one is finished and the stats keep counting. The third live box shows Time left, Words (12 / 30) or Time. The goal is saved with the other settings. | |
 
 ## Summary of every phase
 

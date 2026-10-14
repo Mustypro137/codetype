@@ -10,6 +10,7 @@ let cursorIndex = 0;        // position of the next character to type
 let typingMode = "natural"; // "natural" or "strict"
 let typingLanguage = "";    // used for the syntax colours
 let lastCursorTop = null;   // top of the cursor's line, to see when the line changes
+let wordEnds = [];          // index of the last character of each word (for word goals)
 
 // ===== Public functions (used by main.js) =====
 
@@ -34,6 +35,27 @@ function restartTyping() {
     } else {
         startCountdown(); // from countdown.js
     }
+}
+
+// The next snippet in the same game (time or word goal).
+// The stats keep counting: no reset, no countdown.
+function continueWithSnippet(code, language) {
+    keepSnippetProgress(); // from stats.js
+    typingText = code;
+    typingLanguage = language || "";
+    cursorIndex = 0;
+    renderSnippet();
+    updateCursor();
+}
+
+// Called when the game is over: hides the cursor and the key light.
+// The keys stop working because hasRunEnded() is now true.
+function stopTyping() {
+    const cursor = typingArea.querySelector(".cursor");
+    if (cursor) {
+        cursor.classList.remove("cursor");
+    }
+    highlightNextKey(null); // from keyboard.js
 }
 
 // Changes the mode: "natural" or "strict".
@@ -64,6 +86,22 @@ function renderSnippet() {
         typingArea.appendChild(span);
         charSpans.push(span);
     }
+
+    wordEnds = findWordEnds(typingText);
+}
+
+// A word is text between spaces or new lines.
+// Returns the index of the last character of each word.
+function findWordEnds(text) {
+    const ends = [];
+    for (let i = 0; i < text.length; i++) {
+        const isWordChar = text[i].trim() !== "";
+        const nextIsSpace = i + 1 === text.length || text[i + 1].trim() === "";
+        if (isWordChar && nextIsSpace) {
+            ends.push(i);
+        }
+    }
+    return ends;
 }
 
 // Sets the colour of one character: "correct", "wrong", "auto" or null (not typed).
@@ -116,6 +154,11 @@ function countCorrectChars() {
     return charSpans.filter((span) => span.classList.contains("correct")).length;
 }
 
+// How many words of this snippet the cursor has passed (used for word goals).
+function countWordsTyped() {
+    return wordEnds.filter((end) => end < cursorIndex).length;
+}
+
 // ===== Typing logic =====
 
 // Checks one typed character against the expected one.
@@ -143,10 +186,7 @@ function typeCharacter(typed) {
     }
 
     updateCursor();
-
-    if (isFinished()) {
-        finishStats(); // from stats.js: stop the timer and show the results
-    }
+    checkGoal(); // from goal.js: end the game, go to the next snippet, or go on
 }
 
 // After Enter: jumps over the spaces at the start of the new line.
@@ -189,9 +229,9 @@ function isOnFormControl(event) {
         event.target.closest("select, button, input, textarea") !== null;
 }
 
-// True after the first key and before the last character.
+// True after the first key and before the end (last character or time over).
 function isRunActive() {
-    return hasRunStarted() && !isFinished(); // from stats.js
+    return hasRunStarted() && !hasRunEnded(); // from stats.js
 }
 
 // Esc: move the focus to the Restart button, so keyboard users can leave the code.
@@ -224,6 +264,11 @@ function handleKeydown(event) {
         if (isRunActive()) {
             event.preventDefault();
         }
+        return;
+    }
+
+    // After the end (time over), the keys do nothing until Restart.
+    if (hasRunEnded()) { // from stats.js
         return;
     }
 
