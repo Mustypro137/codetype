@@ -7,12 +7,49 @@
   --muted: #9aa1b2;
   --accent: #f5b942;
   --accent-hover: #ffcc66;
+  --correct: #4ade80;
+  --wrong: #f87171;
+  --wrong-bg: rgba(248, 113, 113, 0.2);
+  --accent-soft: rgba(245, 185, 66, 0.15);
+  --overlay: rgba(15, 17, 23, 0.75);
+
+  /* Syntax colours for code that is not typed yet */
+  --syntax-keyword: #c4a7f5;
+  --syntax-string: #7cc4f0;
+  --syntax-number: #f59e6b;
+  --syntax-comment: #878ea3;
+
+  color-scheme: dark; /* dark scrollbars and form controls */
 
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  --font-mono: ui-monospace, "Cascadia Code", Consolas, "Courier New", monospace;
+  /* Only fonts that come with the system: browsers block other local fonts (privacy) */
+  --font-mono: ui-monospace, Consolas, Menlo, "Courier New", monospace;
 
   --radius: 10px;
   --space: 16px;
+}
+
+/* ===== Light theme: js/theme.js sets data-theme="light" on <html> ===== */
+:root[data-theme="light"] {
+  --bg: #f4f5f9;
+  --surface: #ffffff;
+  --border: #d6dae4;
+  --text: #1c2030;
+  --muted: #5d6478;
+  --accent: #9a6512;
+  --accent-hover: #b47817;
+  --correct: #15803d;
+  --wrong: #b91c1c;
+  --wrong-bg: rgba(185, 28, 28, 0.15);
+  --accent-soft: rgba(154, 101, 18, 0.12);
+  --overlay: rgba(255, 255, 255, 0.8);
+
+  --syntax-keyword: #7c3aed;
+  --syntax-string: #0369a1;
+  --syntax-number: #c2410c;
+  --syntax-comment: #6b7286;
+
+  color-scheme: light;
 }
 
 /* ===== Small reset ===== */
@@ -59,6 +96,22 @@ body {
   color: var(--muted);
 }
 
+.theme-toggle {
+  margin-top: 8px;
+  padding: 6px 14px;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+}
+
 /* ===== Main container ===== */
 .container {
   flex: 1;
@@ -89,6 +142,22 @@ body {
   font-size: 0.9rem;
 }
 
+/* The countdown on/off box */
+.field-checkbox label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.field-checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
 select {
   width: 100%;
   padding: 10px 12px;
@@ -97,6 +166,45 @@ select {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   font: inherit;
+}
+
+/* ===== Custom code panel ===== */
+.custom-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.custom-panel label {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  resize: vertical;
+}
+
+/* The browser's grey placeholder can be too light, so we set it */
+textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+.custom-message {
+  color: var(--wrong);
+  font-size: 0.9rem;
+}
+
+.custom-message:empty {
+  display: none;
 }
 
 /* ===== Live stats ===== */
@@ -130,18 +238,154 @@ select {
 
 /* ===== Code area ===== */
 .code-area {
+  position: relative;         /* so the countdown can sit on top */
   padding: var(--space);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
 }
 
+.code-area:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .code-area pre {
+  position: relative;         /* engine.js measures line positions from here */
+  /* A fixed height (about 10 lines), so the page does not jump when the
+     snippet loads or changes. Longer code scrolls inside the box. */
+  height: min(55vh, calc(1.7em * 10));
+  overflow-y: auto;
+  scroll-behavior: smooth;    /* engine.js scrolls to keep the line in view */
   font-family: var(--font-mono);
   font-size: 1.1rem;
   line-height: 1.7;
   white-space: pre-wrap;      /* long lines wrap, no sideways scroll */
   overflow-wrap: anywhere;
+}
+
+/* Text shown when there is no code yet (custom code before Start) */
+#snippet:empty::before {
+  content: attr(data-empty-text);
+  color: var(--muted);
+}
+
+.typing-hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* ===== Countdown "3, 2, 1" ===== */
+.countdown {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--overlay);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 4rem;
+  font-weight: bold;
+}
+
+/* ===== Syntax colours (only for characters not typed yet) ===== */
+.char.tok-keyword {
+  color: var(--syntax-keyword);
+}
+
+.char.tok-string {
+  color: var(--syntax-string);
+}
+
+.char.tok-number {
+  color: var(--syntax-number);
+}
+
+.char.tok-comment {
+  color: var(--syntax-comment);
+  font-style: italic;
+}
+
+/* ===== Typing: one <span class="char"> per character ===== */
+.char {
+  position: relative;
+  color: var(--muted);        /* not typed yet */
+}
+
+.char.correct,
+.char.auto {
+  color: var(--correct);
+}
+
+.char.wrong {
+  color: var(--wrong);
+  background: var(--wrong-bg); /* so a wrong space is visible too */
+  border-radius: 2px;
+  /* Not only colour: a wavy line also shows the mistake */
+  text-decoration: underline wavy var(--wrong);
+  text-decoration-skip-ink: none;
+  text-underline-offset: 3px;
+}
+
+/* Show ↵ at the end of a line when the cursor is there or Enter was missed */
+.char.newline.cursor::before,
+.char.newline.wrong::before {
+  content: "↵";
+  color: var(--muted);
+}
+
+/* Blinking cursor: a thin bar on the left of the next character */
+.char.cursor::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 2px;
+  background: var(--accent);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* No blinking for people who turned off animations in their system */
+@media (prefers-reduced-motion: reduce) {
+  .char.cursor::after {
+    animation: none;
+  }
+
+  .code-area pre {
+    scroll-behavior: auto;
+  }
+}
+
+/* ===== On-screen symbol keys ===== */
+.key-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.key-row .key {
+  min-width: 2.2em;
+  margin-right: 0;
+  color: var(--muted);
+  transition: background 0.1s, color 0.1s;
+}
+
+/* The key for the next character */
+.key-row .key.next {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
 }
 
 /* ===== Buttons ===== */
@@ -163,6 +407,9 @@ select {
 
 /* Clear outline for keyboard users */
 select:focus-visible,
+textarea:focus-visible,
+input:focus-visible,
+.theme-toggle:focus-visible,
 .btn:focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 2px;
@@ -187,6 +434,107 @@ select:focus-visible,
   background: var(--bg);
 }
 
+.results-subtitle {
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.result-keys {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px 24px;
+  padding: 0;
+  list-style-position: inside; /* keep the numbers 1. 2. 3. inside each column */
+}
+
+kbd {
+  display: inline-block;
+  min-width: 2em;
+  margin-right: 6px;
+  padding: 2px 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  text-align: center;
+}
+
+.results-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* A quieter button: outline only */
+.btn-secondary {
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+}
+
+.btn-secondary:hover {
+  background: var(--accent-soft);
+}
+
+/* ===== Progress section ===== */
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  padding: var(--space);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.progress-empty {
+  color: var(--muted);
+}
+
+.progress-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+.progress-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.progress-table th,
+.progress-table td {
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.progress-table th {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* The number columns */
+.progress-table td + td {
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+.recent-runs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 1.5em;
+  font-size: 0.95rem;
+}
+
 /* ===== Footer ===== */
 .site-footer {
   padding: var(--space);
@@ -200,10 +548,18 @@ select:focus-visible,
 @media (min-width: 768px) {
   .site-header {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
     padding: var(--space) 32px;
     text-align: left;
+  }
+
+  .tagline {
+    flex: 1;
+  }
+
+  .theme-toggle {
+    margin-top: 0;
   }
 
   .container {
@@ -217,6 +573,13 @@ select:focus-visible,
 
   .field {
     flex: 1;
+  }
+
+  /* The checkbox only takes the space it needs, at the height of the dropdowns */
+  .field-checkbox {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    padding-bottom: 10px;
   }
 
   .code-area {
@@ -239,8 +602,8 @@ select:focus-visible,
     grid-template-columns: repeat(4, 1fr);
   }
 
-  .results .btn {
-    align-self: flex-start;
+  .results-actions {
+    flex-direction: row;
   }
 }
 

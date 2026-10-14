@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CodeType – typing practice for programmers</title>
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,6 +13,8 @@
   <header class="site-header">
     <h1 class="logo">Code<span class="accent">Type</span></h1>
     <p class="tagline">Practice typing real code.</p>
+    <!-- Light/dark switch: the text is set by js/theme.js -->
+    <button type="button" id="theme-toggle" class="theme-toggle">☀ Light</button>
   </header>
 
   <main class="container">
@@ -20,14 +23,8 @@
     <form class="controls" aria-label="Practice settings">
       <div class="field">
         <label for="language-select">Language</label>
-        <select id="language-select" name="language">
-          <option value="javascript">JavaScript</option>
-          <option value="python">Python</option>
-          <option value="html">HTML</option>
-          <option value="css">CSS</option>
-          <option value="java">Java</option>
-          <option value="cpp">C++</option>
-        </select>
+        <!-- The options are added by js/main.js from data/snippets.js -->
+        <select id="language-select" name="language"></select>
       </div>
 
       <div class="field">
@@ -37,7 +34,22 @@
           <option value="strict">Strict</option>
         </select>
       </div>
+
+      <div class="field field-checkbox">
+        <label for="countdown-toggle">
+          <input type="checkbox" id="countdown-toggle" checked>
+          Countdown 3, 2, 1
+        </label>
+      </div>
     </form>
+
+    <!-- Custom code: shown when "Custom code" is chosen (js/custom.js) -->
+    <section id="custom-panel" class="custom-panel" aria-label="Custom code" hidden>
+      <label for="custom-input">Paste your own code</label>
+      <textarea id="custom-input" rows="8" spellcheck="false" placeholder="Paste code here…"></textarea>
+      <p id="custom-message" class="custom-message" role="status"></p>
+      <button type="button" id="custom-start-btn" class="btn">Start</button>
+    </section>
 
     <!-- Live stats: JavaScript will update these numbers later -->
     <section class="stats" aria-label="Live stats">
@@ -57,23 +69,32 @@
       </dl>
     </section>
 
-    <!-- Code area: the snippet the user will type -->
-    <section class="code-area" aria-label="Code to type">
-      <pre><code id="snippet">function greet(name) {
-  const message = `Hello, ${name}!`;
-  console.log(message);
-  return message;
-}
-
-greet("CodeType");</code></pre>
+    <!-- Code area: the snippet the user will type.
+         tabindex="0" lets keyboard users reach it with Tab and type there. -->
+    <section id="code-area" class="code-area" aria-label="Code to type" aria-describedby="typing-hint" tabindex="0">
+      <pre><code id="snippet" data-empty-text="Paste your code above and press Start.">Loading snippet…</code></pre>
+      <!-- "3, 2, 1" over the code (js/countdown.js) -->
+      <div id="countdown" class="countdown" aria-live="assertive" hidden></div>
     </section>
+    <p id="typing-hint" class="typing-hint">Enter skips the spaces at the start of a line. Esc leaves the code.</p>
+
+    <!-- Symbol keys: the next key lights up (js/keyboard.js). Only for looks. -->
+    <div id="key-row" class="key-row" aria-hidden="true">
+      <kbd class="key">(</kbd><kbd class="key">)</kbd><kbd class="key">{</kbd><kbd class="key">}</kbd>
+      <kbd class="key">[</kbd><kbd class="key">]</kbd><kbd class="key">&lt;</kbd><kbd class="key">&gt;</kbd>
+      <kbd class="key">;</kbd><kbd class="key">:</kbd><kbd class="key">,</kbd><kbd class="key">.</kbd>
+      <kbd class="key">=</kbd><kbd class="key">+</kbd><kbd class="key">-</kbd><kbd class="key">*</kbd>
+      <kbd class="key">/</kbd><kbd class="key">\</kbd><kbd class="key">|</kbd><kbd class="key">&amp;</kbd>
+      <kbd class="key">!</kbd><kbd class="key">?</kbd><kbd class="key">"</kbd><kbd class="key">'</kbd>
+      <kbd class="key">_</kbd><kbd class="key">#</kbd><kbd class="key">$</kbd><kbd class="key">%</kbd>
+    </div>
 
     <!-- Restart button -->
     <div class="actions">
       <button type="button" id="restart-btn" class="btn">Restart</button>
     </div>
 
-    <!-- Results panel: hidden now, JavaScript will show it later -->
+    <!-- Results panel: hidden until the snippet is finished (js/results.js) -->
     <section id="results" class="results" aria-labelledby="results-title" hidden>
       <h2 id="results-title">Results</h2>
       <dl class="stats-list">
@@ -90,11 +111,40 @@ greet("CodeType");</code></pre>
           <dd id="result-time">0s</dd>
         </div>
         <div class="stat">
-          <dt>Errors</dt>
-          <dd id="result-errors">0</dd>
+          <dt>Mistakes</dt>
+          <dd id="result-mistakes">0</dd>
         </div>
       </dl>
-      <button type="button" id="try-again-btn" class="btn">Try again</button>
+
+      <h3 class="results-subtitle">Keys with most mistakes</h3>
+      <ol id="result-keys" class="result-keys"></ol>
+
+      <div class="results-actions">
+        <button type="button" id="try-again-btn" class="btn btn-secondary">Try again</button>
+        <button type="button" id="next-snippet-btn" class="btn">Next snippet</button>
+      </div>
+    </section>
+
+    <!-- Progress: saved runs from localStorage (js/progress.js) -->
+    <section class="progress" aria-labelledby="progress-title">
+      <h2 id="progress-title">Progress</h2>
+      <p id="progress-empty" class="progress-empty">No finished runs yet. Finish a snippet to see your progress.</p>
+
+      <div id="progress-content" class="progress-content" hidden>
+        <table class="progress-table">
+          <thead>
+            <tr>
+              <th scope="col">Language</th>
+              <th scope="col">Best WPM</th>
+              <th scope="col">Avg accuracy</th>
+            </tr>
+          </thead>
+          <tbody id="progress-body"></tbody>
+        </table>
+
+        <h3 class="results-subtitle">Recent runs</h3>
+        <ol id="recent-runs" class="recent-runs"></ol>
+      </div>
     </section>
 
   </main>
@@ -102,6 +152,21 @@ greet("CodeType");</code></pre>
   <footer class="site-footer">
     <p>CodeType – a practice project in HTML, CSS and JavaScript.</p>
   </footer>
+
+  <!-- Scripts: the data must load first, then the helpers and engine, then main.js -->
+  <script src="data/snippets.js"></script>
+  <script src="js/snippets.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/highlight.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/stats.js"></script>
+  <script src="js/results.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/custom.js"></script>
+  <script src="js/countdown.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/main.js"></script>
 
 </body>
 </html>
