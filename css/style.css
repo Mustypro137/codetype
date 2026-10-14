@@ -426,6 +426,11 @@ input:focus-visible,
   border-radius: var(--radius);
 }
 
+/* The panel gets focus by script only (tabindex="-1"); its border already shows it */
+.results:focus {
+  outline: none;
+}
+
 .results .stats-list {
   grid-template-columns: repeat(2, 1fr);
 }

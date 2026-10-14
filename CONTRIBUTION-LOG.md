@@ -16,6 +16,7 @@
 | 2026-10-14 | | Removed "Cascadia Code" from the font list (the browser blocked it for privacy and showed a console message), committed all the work and pushed it to GitHub. | |
 | 2026-10-14 | | Added a 60-second time limit in js/stats.js: the time counts down from the first key ("Time left"). At 0 the game stops (stopTyping in engine.js) and shows the same results panel. Finishing early still works. The results panel and design are unchanged. | |
 | 2026-10-14 | | Added a "Goal" menu (js/goal.js): 60 seconds, 30 seconds, 60 words, 30 words, Full snippet. With a time or word goal, the next snippet comes when one is finished and the stats keep counting. The third live box shows Time left, Words (12 / 30) or Time. The goal is saved with the other settings. | |
+| 2026-10-14 | | Fixed a bug: when the game ended, the next Space closed the results, because the focus was on the "Next snippet" button. Now the focus goes to the results panel and the page scrolls to it. Tab still reaches the buttons. | |
 
 ## Summary of every phase
 

@@ -6,7 +6,6 @@ const resultAccuracy = document.querySelector("#result-accuracy");
 const resultTime = document.querySelector("#result-time");
 const resultMistakes = document.querySelector("#result-mistakes");
 const resultKeysList = document.querySelector("#result-keys");
-const nextSnippetButton = document.querySelector("#next-snippet-btn");
 
 // Shows the panel with the results from stats.js.
 function showResults(results) {
@@ -17,7 +16,11 @@ function showResults(results) {
     renderTopKeys(results.topKeys);
 
     resultsPanel.hidden = false;
-    nextSnippetButton.focus(); // press Enter to go to the next snippet
+    // Focus the panel, not a button: the player may still be typing,
+    // and a Space or Enter on a button would close the results at once.
+    // Keyboard users press Tab to reach "Try again" and "Next snippet".
+    resultsPanel.focus({ preventScroll: true });
+    resultsPanel.scrollIntoView({ block: "nearest" });
 }
 
 function hideResults() {

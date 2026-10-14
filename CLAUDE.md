@@ -50,6 +50,7 @@ The load order in `index.html` matters. A new file must go in the right place:
 - Never only colour: a mistake is red **and** has a wavy underline.
 - Keyboard: `#code-area` has `tabindex="0"`; typing works there. Tab is blocked only during a run; Esc moves focus to Restart.
 - Focus: buttons that start typing call `focusCode()` (main.js). Dropdowns, the checkbox and the theme button move focus to the code only after a mouse click, never after a key.
+- When a game ends, focus goes to the results panel (`tabindex="-1"`), never to a button: the player may still be typing, and Space or Enter on a button would close the results.
 - The code box has a fixed height, so the page does not jump (CLS 0). Do not fill visible parts of the page with JS on load if you can write them in HTML.
 
 ## Snippet data
