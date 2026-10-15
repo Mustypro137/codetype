@@ -42,8 +42,8 @@ CodeType is a typing practice web app for programmers. Normal typing tests use n
 **Saved in your browser**
 - Your language, mode, countdown setting, theme and runs are saved with `localStorage`. Nothing is sent to a server. If the browser blocks storage, the app still works but does not remember anything.
 
-**Support button (test only)**
-- A **"Support CodeType"** button in the footer opens a PayPal payment of $5. It uses the PayPal **Sandbox**, so the money is fake. To pay, log in with a Sandbox *Personal* account.
+**Support button**
+- A **"Support CodeType ($5)"** button in the footer opens a real PayPal payment of $5 USD. It is a gift to support the project. It does not unlock anything in the app.
 
 **Accessible**
 - Works with the keyboard only. Use **Tab** to reach the code, and **Esc** to leave it while you type.

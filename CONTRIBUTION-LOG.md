@@ -18,6 +18,7 @@
 | 2026-10-14 | | Added a "Goal" menu (js/goal.js): 60 seconds, 30 seconds, 60 words, 30 words, Full snippet. With a time or word goal, the next snippet comes when one is finished and the stats keep counting. The third live box shows Time left, Words (12 / 30) or Time. The goal is saved with the other settings. | |
 | 2026-10-14 | | Fixed a bug: when the game ended, the next Space closed the results, because the focus was on the "Next snippet" button. Now the focus goes to the results panel and the page scrolls to it. Tab still reaches the buttons. | |
 | 2026-10-14 | | Added a "Support CodeType ($5, test)" button in the footer. It is a plain HTML PayPal form that uses the PayPal Sandbox (fake money) and the Sandbox Business account. No JavaScript. Added a short note in the README. | |
+| 2026-10-15 | | Changed the support button from the PayPal Sandbox to real PayPal: the form now goes to www.paypal.com and uses the PayPal Merchant ID (so the email is not public). The button now says "Support CodeType ($5)". Updated the README note. | |
 
 ## Summary of every phase
 
