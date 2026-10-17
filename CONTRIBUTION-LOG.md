@@ -19,6 +19,8 @@
 | 2026-10-14 | | Fixed a bug: when the game ended, the next Space closed the results, because the focus was on the "Next snippet" button. Now the focus goes to the results panel and the page scrolls to it. Tab still reaches the buttons. | |
 | 2026-10-14 | | Added a "Support CodeType ($5, test)" button in the footer. It is a plain HTML PayPal form that uses the PayPal Sandbox (fake money) and the Sandbox Business account. No JavaScript. Added a short note in the README. | |
 | 2026-10-15 | | Changed the support button from the PayPal Sandbox to real PayPal: the form now goes to www.paypal.com and uses the PayPal Merchant ID (so the email is not public). The button now says "Support CodeType ($5)". Updated the README note. | |
+| 2026-10-17 | | Made the project better for a portfolio: added a page description and link-preview tags (Open Graph) in index.html, so a card with a screenshot shows when the link is shared on LinkedIn or WhatsApp. Added "Built by Mustypro137" and a "Source code on GitHub" link in the footer (underlined, works with the keyboard). | |
+| 2026-10-17 | | Added a short "Highlights" section at the top of README.md: 4 points (no frameworks, typing engine from scratch, accessibility and Lighthouse 100, works on all screens) for people who only read the README for a short time. | |
 
 ## Summary of every phase
 

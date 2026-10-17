@@ -8,6 +8,13 @@ CodeType is a typing practice web app for programmers. Normal typing tests use n
 
 ![CodeType in the dark theme while typing JavaScript](images/screenshots/typing-dark.png)
 
+## Highlights
+
+- **No frameworks, no build step.** Plain HTML, CSS and JavaScript, split into 14 small files with one job each.
+- **A typing engine made from scratch.** It handles mistakes, Backspace, indentation, two modes and goals by time or by words.
+- **Accessible.** It works with the keyboard only, has good colour contrast in both themes, and scores 100 in Lighthouse for Performance, Accessibility and Best Practices.
+- **Works everywhere.** Phone, tablet and desktop, light and dark theme. Settings and runs are saved in the browser with `localStorage`.
+
 ## Features
 
 **Typing**
